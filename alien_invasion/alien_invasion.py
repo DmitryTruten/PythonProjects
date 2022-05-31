@@ -94,8 +94,25 @@ class AlienInvasion:
 
     def _check_play_button(self, mouse_pos):
         """Розпочати гру коли користувач натисне кнопку"""
-        if self.play_button.rect.collidepoint(mouse_pos):
-            self.stats.game_active = True
+        button_clicked = self.play_button.rect.collidepoint(mouse_pos)
+        if button_clicked and not self.stats.game_active:
+            self._start_game()
+
+    def _start_game(self):
+        # Анулювати ігрову статистику
+        self.stats.reset_stats()
+        self.stats.game_active = True
+
+        # Позбавитися надлишку прибульців та куль
+        self.aliens.empty()
+        self.bullets.empty()
+
+        # Створити новйи флот та відцентрувати корабель
+        self._create_fleet()
+        self.ship.center_ship()
+
+        # Приховати курсор миші
+        pygame.mouse.set_visible(False)
 
     def _check_keydown_events(self, event):
         """Реагувати на натискання клавіш"""
@@ -107,6 +124,8 @@ class AlienInvasion:
             self.ship.moving_top = True
         elif event.key == pygame.K_DOWN:
             self.ship.moving_bottom = True
+        elif event.key == pygame.K_p:
+            self._start_game()
         elif event.key == pygame.K_q:
             sys.exit()
         elif event.key == pygame.K_SPACE:
@@ -174,6 +193,7 @@ class AlienInvasion:
             sleep(0.5)
         else:
             self.stats.game_active = False
+            pygame.mouse.set_visible(True)
 
     def _check_aliens_bottom(self):
         """Перевірити, чи не досяг якийсь прибулець нижнього краю екрана"""
