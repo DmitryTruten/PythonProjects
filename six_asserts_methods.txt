@@ -1,6 +1,0 @@
-assertEqual(a, b) - a == b
-assertNotEqual(a, b) - a != b
-assertTrue(x) - x is True
-assertFalse(x) - x is False
-assertIn(item, list) - check item in list
-assertNotIn(item, list) - check item isn't in list
