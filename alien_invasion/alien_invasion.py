@@ -5,6 +5,7 @@ from ship import Ship
 from bullet import Bullet
 from alien import Alien
 from game_stats import GameStats
+from scoreboard import Scoreboard
 from button import Button
 from time import sleep
 
@@ -21,10 +22,11 @@ class AlienInvasion:
         self.settings.screen_width = self.screen.get_rect().width
         self.settings.screen_height = self.screen.get_rect().height
         pygame.display.set_caption("Alien Invasion")
-        self.background_image = pygame.image.load('images/background.bmp')
+        self.background_image = self.settings.background_image
 
         # Створити екземпляр для збереження ігрової статистики
         self.stats = GameStats(self)
+        self.sb = Scoreboard(self)
         self.ship = Ship(self)
         self.bullets = pygame.sprite.Group()
         self.aliens = pygame.sprite.Group()
@@ -96,6 +98,7 @@ class AlienInvasion:
         """Розпочати гру коли користувач натисне кнопку"""
         button_clicked = self.play_button.rect.collidepoint(mouse_pos)
         if button_clicked and not self.stats.game_active:
+            self.settings.initialize_dynamic_settings()
             self._start_game()
 
     def _start_game(self):
@@ -164,6 +167,7 @@ class AlienInvasion:
             # Знищити наявні кулі та створити новий флот
             self.bullets.empty()
             self._create_fleet()
+            self.settings.increase_speed()
 
     def _update_aliens(self):
         """Перевірити, чи флот знаходиться на краю
@@ -211,6 +215,10 @@ class AlienInvasion:
         for bullet in self.bullets.sprites():
             bullet.draw_bullet()
         self.aliens.draw(self.screen)
+
+        # Намалювати інформацію про рахунок
+        self.sb.show_score()
+
         # Намалювати кнопку, якщо гра неактивна
         if not self.stats.game_active:
             self.play_button.draw_button()
