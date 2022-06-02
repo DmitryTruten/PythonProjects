@@ -12,7 +12,6 @@ class Settings:
         self.bg_color = (0, 0, 0)
         self.background_image = pygame.image.load('images/background.bmp')
 
-
         # Налаштування корабля
         self.ship_limit = 3
 
@@ -29,6 +28,9 @@ class Settings:
         self.speedup_scale = 1.1
         self.initialize_dynamic_settings()
 
+        # Як щвидко збільшується вартість прибульців
+        self.score_scale = 1.5
+
     def initialize_dynamic_settings(self):
         """Ініціалізація змінних налаштувань"""
         self.ship_speed = 1
@@ -38,9 +40,12 @@ class Settings:
         # fleet_direction 1 означає напрямок руху праворуч; -1 --ліворуч
         self.fleet_direction = 1
 
+        # Отримання балів
+        self.alien_points = 50
+
     def increase_speed(self):
-        """Збільшення налаштувань швидкості"""
+        """Збільшення налаштувань швидкості та вартості прибульців"""
         self.ship_speed *= self.speedup_scale
         self.bullet_speed *= self.speedup_scale
         self.alien_speed *= self.speedup_scale
-
+        self.alien_points = int(self.alien_points * self.score_scale)

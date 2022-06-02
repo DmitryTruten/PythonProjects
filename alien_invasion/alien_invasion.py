@@ -100,6 +100,7 @@ class AlienInvasion:
         if button_clicked and not self.stats.game_active:
             self.settings.initialize_dynamic_settings()
             self._start_game()
+            self.sb.prep_score()
 
     def _start_game(self):
         # Анулювати ігрову статистику
@@ -162,7 +163,13 @@ class AlienInvasion:
     def _check_bullet_alien_collisions(self):
         """Реакція на зіткнення куль з прибульцями"""
         # Видалити всі кулі та створити новий флот
-        pygame.sprite.groupcollide(self.bullets, self.aliens, True, True)
+        collisions = pygame.sprite.groupcollide(
+            self.bullets, self.aliens, True, True)
+
+        if collisions:
+            for aliens in collisions.values():
+                self.stats.score += self.settings.alien_points * len(aliens)
+            self.sb.prep_score()
         if not self.aliens:
             # Знищити наявні кулі та створити новий флот
             self.bullets.empty()
