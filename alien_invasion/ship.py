@@ -14,6 +14,8 @@ class Ship(Sprite):
 
         # Завантажити зображення корабля та отримати його rect
         self.image = pygame.image.load('images/ship.png')
+
+        self.rect = self.image.get_rect()
         self.rect = self.image.get_rect()
 
         # Створювати кожен новий корабель внизу екрана по центру
@@ -57,3 +59,16 @@ class Ship(Sprite):
     def blitme(self):
         """Намалювати корабель у його поточному розташуванні"""
         self.screen.blit(self.image, self.rect)
+
+
+class SmallShip(Ship):
+    """Клас корабля зі зменшеним зображеннням"""
+
+    def __init__(self, ai_game):
+        """Завантаження зменшеного зображення"""
+
+        super().__init__(ai_game)
+        self.image = pygame.image.load('images/small_ship.png')
+
+        self.rect = self.image.get_rect()
+        self.rect = self.image.get_rect()

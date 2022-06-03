@@ -7,8 +7,8 @@ class Settings:
     def __init__(self):
         """Ініціалізувати постійні налаштування гри"""
 
-        self.screen_width = 1366
-        self.screen_height = 768
+        self.screen_width = 1300
+        self.screen_height = 700
         self.bg_color = (0, 0, 0)
         self.background_image = pygame.image.load('images/background.bmp')
 

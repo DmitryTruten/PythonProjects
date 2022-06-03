@@ -6,7 +6,7 @@ from bullet import Bullet
 from alien import Alien
 from game_stats import GameStats
 from scoreboard import Scoreboard
-from button import Button
+from button import Button, ExitButton
 from time import sleep
 
 
@@ -33,6 +33,7 @@ class AlienInvasion:
         self.stars = pygame.sprite.Group()
         self._create_fleet()
         self.play_button = Button(self, "Жмакни шобы плеить")
+        self.exit_button = ExitButton(self, "Жмакни шобы жеско")
 
     def _create_alien(self, alien_number, row_number):
         # Створити прибульця та поставити його до ряду
@@ -97,10 +98,16 @@ class AlienInvasion:
     def _check_play_button(self, mouse_pos):
         """Розпочати гру коли користувач натисне кнопку"""
         button_clicked = self.play_button.rect.collidepoint(mouse_pos)
+        exit_button_clicked = self.exit_button.rect.collidepoint(mouse_pos)
         if button_clicked and not self.stats.game_active:
             self.settings.initialize_dynamic_settings()
             self._start_game()
             self.sb.prep_score()
+            self.sb.prep_level()
+            self.sb.prep_ships()
+            
+        elif exit_button_clicked and not self.stats.game_active:
+            sys.exit()
 
     def _start_game(self):
         # Анулювати ігрову статистику
@@ -170,11 +177,17 @@ class AlienInvasion:
             for aliens in collisions.values():
                 self.stats.score += self.settings.alien_points * len(aliens)
             self.sb.prep_score()
+            self.sb.check_high_score()
+
         if not self.aliens:
             # Знищити наявні кулі та створити новий флот
             self.bullets.empty()
             self._create_fleet()
             self.settings.increase_speed()
+
+            # Збільшити рівень
+            self.stats.level += 1
+            self.sb.prep_level()
 
     def _update_aliens(self):
         """Перевірити, чи флот знаходиться на краю
@@ -192,8 +205,9 @@ class AlienInvasion:
     def _ship_hit(self):
         """Реагувати на зіткнення прибульця з корапблем"""
         if self.stats.ships_left > 0:
-            # Зменшити ships_left
+            # Зменшити ships_left та оновити табло
             self.stats.ships_left -= 1
+            self.sb.prep_ships()
             # Позбавитися надлишку прибульців та куль
             self.aliens.empty()
             self.bullets.empty()
@@ -229,6 +243,7 @@ class AlienInvasion:
         # Намалювати кнопку, якщо гра неактивна
         if not self.stats.game_active:
             self.play_button.draw_button()
+            self.exit_button.draw_button()
 
         pygame.display.flip()
 

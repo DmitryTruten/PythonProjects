@@ -32,3 +32,35 @@ class Button:
         # Намалювати порожню кнопку, а тоді повідомлення
         self.screen.fill(self.button_color, self.rect)
         self.screen.blit(self.msg_image, self.msg_image_rect)
+
+
+class ExitButton(Button):
+    """Клас кнопки виходи з гри"""
+
+    def __init__(self, ai_game, msg):
+        """Ініціалізація атрибутів кнопки"""
+        super().__init__(ai_game, msg)
+        # Задати розміри та властивості кнопки
+        self.width, self.height = 300, 60
+        self.button_color = (100, 0, 0)
+
+        self.rect = pygame.Rect(0, 0, self.width, self.height)
+        self.rect.bottomright = self.screen_rect.bottomright
+
+        self.msg_image = self.font.render(msg, True, self.text_color,
+                                          self.button_color)
+        self.msg_image_rect = self.msg_image.get_rect()
+        self.msg_image_rect.midbottom = self.rect.center
+
+        self.screen.fill(self.button_color, self.rect)
+        self.screen.blit(self.msg_image, self.msg_image_rect)
+
+
+
+
+
+
+
+
+
+
